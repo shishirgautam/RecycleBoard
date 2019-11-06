@@ -1,124 +1,87 @@
-package com.shishir.dashboard.recycleboard;
+package com.shishir.dashboard.recycleboard.Adapter;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 
-import com.shishir.dashboard.recycleboard.Adapter.UserDetailAdapter;
+import com.shishir.dashboard.recycleboard.R;
 import com.shishir.dashboard.recycleboard.model.UserDetail;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    EditText etName,etAge;
-    RadioButton rbMale, rbFemale, rbOthers;
-    Spinner spinner;
-    Button btnSave;
-    RadioGroup rg;
-    RecyclerView recyclerView;
-    String gen;
-    int img;
-    List<UserDetail> userList = new ArrayList<>();
+public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.UserDetailViewHolder> {
+    Context context;
+    List<UserDetail> userDetailList;
 
 
+    public UserDetailAdapter(Context context, List<UserDetail> userDetailList) {
+        this.context = context;
+        this.userDetailList = userDetailList;
+    }
+
+    @NonNull
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public UserDetailAdapter.UserDetailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.userview, parent, false);
+        return new UserDetailViewHolder(view);
+    }
 
-        etName=findViewById(R.id.etName);
-        etAge=findViewById(R.id.etAge);
-        rbMale=findViewById(R.id.rbMale);
-        rbFemale=findViewById(R.id.rbFemale);
-        rbOthers=findViewById(R.id.rbOthers);
-        btnSave=findViewById(R.id.btnSave);
-        spinner=findViewById(R.id.spinner);
-        rg=findViewById(R.id.rg);
-
-
-        btnSave.setOnClickListener(this);
+    @SuppressLint("ResourceType")
+    @Override
+    public void onBindViewHolder(@NonNull UserDetailAdapter.UserDetailViewHolder holder, int position) {
+        final UserDetail userDetail = userDetailList.get(position);
 
 
 
-        String images []={"Select Image","Birat","Model","Old","Four","Five","Six"};
-        ArrayAdapter adapter= new ArrayAdapter<>(
-                this,android.R.layout.simple_list_item_1,images
+        int image_id = userDetail.getImageId();
+        int age = userDetail.getAge();
 
-        );
-        spinner.setAdapter(adapter);
-
+        holder.ivImage.setImageResource(image_id);
+        holder.tvName.setText(userDetail.getName().toString());
+        holder.tvAge.setText(String.valueOf(age));
+        holder.tvGender.setText(userDetail.getGender().toString());
+        //holder.ivImage.setImageResource(2131099747);
 
     }
 
     @Override
-    public void onClick(View v) {
-        if(TextUtils.equals(etName.getText().toString(),"")){
-            return;
-        }
-        if(TextUtils.equals(etAge.getText().toString(),"")){
-            return;
-        }
-
-        recyclerView = findViewById(R.id.recyclerView);
-
-        if(rbMale.isChecked()){
-            gen="Male";
-        }
-        if(rbFemale.isChecked()){
-            gen="Female";
-        }
-        if(rbOthers.isChecked()){
-            gen="Others";
-        }
-        String image=spinner.getSelectedItem().toString();
-        if(image=="Birat"){
-            img=  R.drawable.three ;
-        }
-        if(image=="Model"){
-            img=  R.drawable.two ;
-        }
-        if(image=="Old"){
-            img=  R.drawable.one ;
-        }
-        if(image=="Four"){
-            img=  R.drawable.four ;
-        }
-        if(image=="Five"){
-            img=  R.drawable.five ;
-        }
-        if(image=="Six"){
-            img=  R.drawable.six ;
-        }
-
-        int age=Integer.parseInt(etAge.getText().toString());
-
-        userList.add(new UserDetail(etName.getText().toString(), age, gen, img));
-        UserDetailAdapter userDetailAdapter = new UserDetailAdapter(this, userList);
-        recyclerView.setAdapter(userDetailAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    public int getItemCount() {
+        return userDetailList.size();
+    }
 
 
+    public  class UserDetailViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView ivImage;
+        TextView tvName, tvGender, tvAge;
+        Button btndelete;
 
 
+        public UserDetailViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ivImage = itemView.findViewById(R.id.ivImage);
+            tvName = itemView.findViewById(R.id.tvName);
+            tvAge = itemView.findViewById(R.id.tvAge);
+            tvGender = itemView.findViewById(R.id.tvGender);
+            btndelete = itemView.findViewById(R.id.btndelete);
+        }
 
 
-        etName.setText("");
-        etAge.setText("");
-        rbFemale.clearFocus();
-        rbOthers.clearFocus();
-        rbMale.clearFocus();
-        spinner.clearFocus();
 
     }
+
 }
+
+
+
